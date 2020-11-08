@@ -11,6 +11,13 @@ interface ProductProperties {
   __v?: number,
 }
 
+interface ProductInfoProperties {
+  total: number,
+  limit: number,
+  page: string,
+  pages: number
+}
+
 interface RenderItemProperties {
   item: ProductProperties
 }
@@ -19,15 +26,27 @@ interface RenderItemProperties {
 const Main = () => {
 
   const [ products, setProducts ] = useState<ProductProperties[]>([])
+  const [ productInfo, setProductInfo ] = useState<ProductInfoProperties>()
+  const [ page, setPage ] = useState(1)
+
+  useEffect(() => {
+    loadProducts()
+  }, [page])
 
   const loadProducts = async () => {
-    const response = await api.get('/products');
+    const response = await api.get(`/products?page=${page}`);
 
-    const { docs } = response.data;
+    const { docs, ...info } = response.data;
 
-    console.log(docs)
+    setProducts(prevProducts => [...prevProducts, ...docs])
+    setProductInfo(info)
+  }
 
-    setProducts(docs)
+  const loadMore = () => {
+    if (!productInfo) return;
+    if (page === productInfo.pages) return;
+
+    setPage(page + 1);
   }
 
   const renderItem = (obj: RenderItemProperties) => {
@@ -43,13 +62,16 @@ const Main = () => {
     )
   }
 
-  useEffect(() => {
-    loadProducts()
-  }, [])
-
   return (
     <View style={styles.container}>
-      <FlatList contentContainerStyle={styles.list} data={products} keyExtractor={item => item._id} renderItem={renderItem} />
+      <FlatList
+        contentContainerStyle={styles.list}
+        data={products}
+        keyExtractor={item => item._id}
+        renderItem={renderItem}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.1}
+      />
     </View>
   )
 }
