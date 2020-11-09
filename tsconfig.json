@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "target": "es6", // Specify ECMAScript target version
+    "allowJs": true, // Allow JavaScript files to be compiled
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
-    "lib": ["dom", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "node",
     "noEmit": true,
     "skipLibCheck": true,
