@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Text } from 'react-native'
+import { WebView } from 'react-native-webview'
 
 interface ProductProperties {
   _id: string
@@ -22,8 +22,8 @@ interface props {
 
 const Product = (props: props) => {
   const { product } = props.route.params
-
-  return <Text>{product.title}</Text>
+  console.log(product.url)
+  return <WebView source={{ uri: product.url }} />
 }
 
 export default Product

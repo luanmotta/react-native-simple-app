@@ -30,10 +30,10 @@ const Routes = () => {
         <Stack.Screen
           name="Product"
           component={Product}
-          options={{
-            title: 'JSHunt',
+          options={({ route }) => ({
+            title: route.params.product.title,
             ...headerStyles
-          }}
+          })}
         />
       </Stack.Navigator>
     </NavigationContainer>
